@@ -9,19 +9,19 @@ argParser.add_argument("-p", "--pdf", nargs='*',
 argParser.add_argument("-o", "--operation", nargs='*',
                        help="The operation you want to execute : merge severals pdf, delete page", default='merge')
 argParser.add_argument("-pg","--page",nargs='*',type = int, help="The page numero you want to delete")
-
+argParser.add_argument("-rg","--range",nargs='*',type = int, help="The range of page you want to delete")
 args = argParser.parse_args()
 print("args=%s" % args)
 match args.operation:
     case ['merge']:
-
-        merger = PdfFileMerger()
-        mergedPdf = list(args.pdf)
-        for pdf in mergedPdf:
-            if pdf.endswith('pdf'):
-                merger.append(pdf)
-        merger.write('merged_file.pdf')
-        merger.close()
+        if args.pdf:
+            merger = PdfFileMerger()
+            mergedPdf = list(args.pdf)
+            for pdf in mergedPdf:
+                if pdf.endswith('pdf'):
+                    merger.append(pdf)
+            merger.write('merged_file.pdf')
+            merger.close()
     
     case ['delete']:
         if args.page:
@@ -35,3 +35,7 @@ match args.operation:
                     outFile.add_page(pageToKeep)
             with open("new_"+args.pdf[0] , 'wb') as f:
                 outFile.write(f)
+                
+    case ['extract']:
+
+        
