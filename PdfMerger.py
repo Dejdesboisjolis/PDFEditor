@@ -42,7 +42,6 @@ match args.operation:
             args.range[0] = args.range[0] - 1  # correction de la range de page a effacer
             for page in range(len(inFile.pages)):
                 if page not in range(args.range[0],args.range[1]): 
-                    print(args.range[0],args.range[1])
                     pageToKeep = inFile._get_page(page)
                     outFile.add_page(pageToKeep)
 
@@ -51,13 +50,22 @@ match args.operation:
                 
     case ['extract']:
         inFile = PdfReader(args.pdf[0],'rb')
+        outFile = PdfWriter()
         if args.page:
             args.page[:] = [p - 1 for p in args.page] # correction du numero de la page a effacer
             for i, page in zip(range(len(inFile.pages)),range(len(inFile.pages))):
                 if page in args.page: #cette condition plante
-                    print("coucou")
                     outFile = PdfWriter()
                     pageToExtract = inFile._get_page(page)
                     outFile.add_page(pageToExtract)
-                    with open("after_extracted_Page_"+str(i)+"_"+args.pdf[0] , 'wb') as f:
+                    with open("after_extracted_page_"+str(i)+"_"+args.pdf[0] , 'wb') as f:
                         outFile.write(f)
+        if args.range:
+            args.range[0] = args.range[0] - 1  # correction de la range de page a effacer
+            for page in range(len(inFile.pages)):
+               if page in range(args.range[0],args.range[1]):  
+                    pageToKeep = inFile._get_page(page)
+                    outFile.add_page(pageToKeep)
+
+        with open("after_extracted_page_"+str(args.range[0])+"to_"+str(args.range[1])+"_"+args.pdf[0] , 'wb') as f:
+            outFile.write(f)
