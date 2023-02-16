@@ -12,6 +12,11 @@ SELECTION = {
     "pg": "page"
 }
 
+def nbpagespdf(fichierpdf):
+    """retourne le nombre de pages du fichier pdf"""
+    with open(fichierpdf, "rb") as f:
+        return pyPdf.PdfFileReader(f).getNumPages()
+
 
 def merge_pdf(args: list):
     merger = PdfFileMerger()
@@ -44,13 +49,14 @@ def delete_range_pdf(args: list):
 def extract_page_pdf(args: list):
     # correction du numero de la page a effacer
     args.page[:] = [p - 1 for p in args.page]
-    for i, page in zip(range(len(inFile.pages)), range(len(inFile.pages))):
+    for i, page in zip(range(len(inFile.pages)),range(len(inFile.pages))):
         if page in args.page:  # cette condition plante
             outFile = PdfWriter()
             pageToExtract = inFile._get_page(page)
             outFile.add_page(pageToExtract)
-            with open("after_extracted_page_"+str(i+1)+"_"+args.pdf[0], 'wb') as f:
+            with open("after_extracted_page_"+str(i+1)+"_"+args.pdf[0] , 'wb') as f:
                 outFile.write(f)
+                print(f)
 
 
 def extract_range_pdf(args: list):
